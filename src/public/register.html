@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Registro</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<nav class="nav">
+<a href="/index.html">Productos</a>
+</nav>
+
+
+<main class="container">
+<h1>Registro</h1>
+<form id="registerForm" class="card">
+<input name="username" required placeholder="Nombre de usuario" />
+<input name="email" type="email" required placeholder="Email" />
+<input name="password" type="password" required placeholder="Contraseña" />
+<select name="role">
+<option value="user">Usuario</option>
+<option value="admin">Administrador</option>
+</select>
+<button>Crear cuenta</button>
+</form>
+<p>¿Ya tienes cuenta? <a href="/login.html">Inicia sesión</a></p>
+</main>
+
+
+<script>
+const form = document.getElementById('registerForm');
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+const data = Object.fromEntries(new FormData(form));
+const res = await fetch('/api/auth/register', {
+method: 'POST', headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(data)
+});
+const json = await res.json();
+if (!res.ok) return alert(json.message || 'Error en registro');
+localStorage.setItem('token', json.token);
+localStorage.setItem('user', JSON.stringify(json.user));
+location.href = '/index.html';
+});
+</script>
+</body>
+</html>

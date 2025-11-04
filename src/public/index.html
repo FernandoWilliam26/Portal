@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Portal de Productos</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<nav class="nav">
+<a href="/index.html">Productos</a>
+<span class="spacer"></span>
+<a id="loginLink" href="/login.html">Login</a>
+<a id="registerLink" href="/register.html">Registro</a>
+<button id="logoutBtn" class="hidden">Salir</button>
+<a id="chatLink" class="hidden" href="/chat.html">Chat</a>
+</nav>
+
+
+<main class="container">
+<h1>Productos</h1>
+
+
+<div id="adminPanel" class="card hidden">
+<h2>Crear producto</h2>
+<form id="createForm">
+<input required name="name" placeholder="Nombre" />
+<input required name="price" type="number" step="0.01" placeholder="Precio" />
+<input name="imageUrl" placeholder="URL de imagen (opcional)" />
+<textarea name="description" placeholder="Descripción"></textarea>
+<button>Crear</button>
+</form>
+</div>
+
+
+<div id="products" class="grid"></div>
+</main>
+
+
+<script src="/client.js"></script>
+</body>
+</html>

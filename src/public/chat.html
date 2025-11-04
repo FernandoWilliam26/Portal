@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chat</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<nav class="nav">
+<a href="/index.html">Productos</a>
+<span class="spacer"></span>
+<button id="logoutBtn">Salir</button>
+</nav>
+
+
+<main class="container">
+<h1>Chat</h1>
+<div id="chatBox" class="chat-box"></div>
+<form id="chatForm" class="chat-form">
+<input id="chatInput" autocomplete="off" placeholder="Escribe un mensaje..." />
+<button>Enviar</button>
+</form>
+</main>
+
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" ></script>
+<script src="/chat.js"></script>
+</body>
+</html>
