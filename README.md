@@ -28,7 +28,7 @@ Repositorio: [FernandoWilliam26/Portal](https://github.com/FernandoWilliam26/Por
    
 
    git clone https://github.com/FernandoWilliam26/Portal.git
-   
+
    cd Portal
 
    ---
@@ -48,6 +48,7 @@ Repositorio: [FernandoWilliam26/Portal](https://github.com/FernandoWilliam26/Por
 4. ## 📂 Estructura del proyecto
 
     Portal/
+    
     │
     ├─ node_modules/ 
     ├─ src/ 
