@@ -45,36 +45,5 @@ Repositorio: [FernandoWilliam26/Portal](https://github.com/FernandoWilliam26/Por
    
    npm start
 
-4. ## 📂 Estructura del proyecto
 
-    Portal/
-    
-    │
-    ├─ node_modules/ 
-    ├─ src/ 
-    │ ├─ middleware/ 
-    │ │ ├─ AuthenticateJWT.js
-    │ │ └─ AuthorizeRole.js
-    │ ├─ models/ 
-    │ │ ├─ Product.js
-    │ │ └─ User.js
-    │ ├─ public/ 
-    │ │ ├─ chat.html
-    │ │ ├─ chat.js
-    │ │ ├─ client.js
-    │ │ ├─ index.html
-    │ │ ├─ login.html
-    │ │ ├─ register.html
-    │ │ └─ styles.css
-    │ ├─ routes/ 
-    │ │ ├─ authRoutes.js
-    │ │ ├─ chatRoutes.js
-    │ │ └─ productRoutes.js
-    │ ├─ config.js 
-    │ └─ server.js 
-    ├─ .env 
-    ├─ .gitignore 
-    ├─ package-lock.json 
-    ├─ package.json 
-    └─ README.md 
 
