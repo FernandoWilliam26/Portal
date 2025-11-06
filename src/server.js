@@ -57,33 +57,48 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/chat', chatRoutes);
 
-// Socket.IO Auth por JWT (en handshake.query o handshake.auth)
 io.use((socket, next) => {
-  try {
-    const token = socket.handshake.auth?.token || socket.handshake.query?.token;
-    if (!token) return next(new Error('Token requerido'));
-    const payload = jwt.verify(token, config.jwtSecret);
-    socket.user = payload; // { id, username, role }
-    next();
-  } catch (err) {
-    next(new Error('Token inválido'));
-  }
+  const token = socket.handshake.auth?.token;
+  const color = socket.handshake.auth?.color || '#ffffff';  // Recibe el color desde el cliente
+  if (!token) return next(new Error('Token requerido'));
+
+  const payload = jwt.verify(token, process.env.JWT_SECRET || 'dev_secret');
+  socket.user = payload;
+  socket.user.color = color;  // Guardamos el color en la sesión del socket
+  next();
 });
 
+
+// Paleta de colores predefinida
+const colors = [
+  '#1E90FF', '#32CD32', '#FF6347', '#FFD700',
+  '#FF69B4', '#00CED1', '#ADFF2F', '#FF4500',
+  '#8A2BE2', '#FF8C00', '#40E0D0', '#DC143C'
+];
+
+// Asignar color a cada usuario conectado
+const userColors = {};
+
 io.on('connection', (socket) => {
-  const { username } = socket.user;
-  console.log(`🔌 Usuario conectado: ${username}`);
+  const { username, color } = socket.user;
+  console.log(`🎨 ${username} conectado con color ${color}`);
 
   io.emit('chat:system', `${username} se ha conectado`);
 
   socket.on('chat:message', (msg) => {
-    io.emit('chat:message', { user: username, text: msg, ts: Date.now() });
+    io.emit('chat:message', {
+      user: username,
+      color,
+      text: msg,
+      ts: Date.now(),
+    });
   });
 
   socket.on('disconnect', () => {
     io.emit('chat:system', `${username} se ha desconectado`);
   });
 });
+
 
 // Conexión a MongoDB
 (async () => {

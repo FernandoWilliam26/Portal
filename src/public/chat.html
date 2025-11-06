@@ -1,30 +1,163 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Chat</title>
-<link rel="stylesheet" href="/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    body { font-family: sans-serif; background-color: #121212; color: white; }
+    #chatBox { height: 400px; overflow-y: auto; border: 1px solid #444; padding: 10px; margin-bottom: 10px; }
+    #chatBox li { margin: 4px 0; color: #ddd; }
+    strong { font-weight: bold; }
+  </style>
 </head>
 <body>
-<nav class="nav">
-<a href="/index.html">Productos</a>
-<span class="spacer"></span>
-<button id="logoutBtn">Salir</button>
-</nav>
+  <h1>💬 Chat en tiempo real</h1>
 
+  <!-- Contenedor para la selección del color -->
+  <div id="colorPickerContainer">
+    <label for="colorPicker">Elige tu color de nombre:</label>
+    <input type="color" id="colorPicker" value="#1E90FF" />
+    <button id="joinChat">Entrar al chat</button>
+  </div>
 
-<main class="container">
-<h1>Chat</h1>
-<div id="chatBox" class="chat-box"></div>
-<form id="chatForm" class="chat-form">
-<input id="chatInput" autocomplete="off" placeholder="Escribe un mensaje..." />
-<button>Enviar</button>
-</form>
-</main>
+  <!-- Contenedor del chat, oculto hasta que el usuario entre -->
+  <div id="chatContainer" style="display:none;">
+    <ul id="chatBox"></ul>
+    <form id="chatForm">
+      <input id="chatInput" type="text" placeholder="Escribe tu mensaje..." autocomplete="off" />
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
 
+  <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    (function () {
+      // Primero, verificamos si el token y el usuario están en localStorage
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      
+      // Si no hay token o no hay usuario, redirigir a login
+      if (!token || !user) {
+        alert('Debes iniciar sesión para acceder al chat');
+        location.href = '/login.html'; // Redirige a la página de login
+        return; // Sale de la función autoejecutable si no hay token
+      }
 
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" ></script>
-<script src="/chat.js"></script>
+      // --- Selección de color por el usuario ---
+      // Función para validar que el color esté en formato HEX
+      function validarHex(c) {
+        return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(c); // Validación de color HEX
+      }
+
+      // Intentar obtener el color desde localStorage
+      let chosenColor = localStorage.getItem('chatColor') || '';
+
+      // Si no hay color guardado, pedir al usuario que ingrese un color
+      if (!chosenColor || !validarHex(chosenColor)) {
+        const input = prompt("Por favor, ingresa tu color en formato HEX (p. ej. #FF6347):");
+
+        // Validar que el color ingresado sea correcto, sino usar un color predeterminado
+        chosenColor = validarHex(input || '') ? input : '#1E90FF'; // Si no es válido, asigna un color predeterminado
+        localStorage.setItem('chatColor', chosenColor); // Guardamos el color en localStorage
+      }
+
+      // Guardar el color en localStorage
+      localStorage.setItem('chatColor', chosenColor);
+
+      // Botón para cambiar el color si existe en el DOM
+      const colorPicker = document.getElementById('colorPicker');
+      colorPicker.value = chosenColor; // Aseguramos que el color picker tenga el color elegido previamente
+
+      colorPicker.addEventListener('input', (e) => {
+        chosenColor = e.target.value; // Cuando el usuario elige un color, lo guardamos
+        localStorage.setItem('chatColor', chosenColor); // Guardar en localStorage
+      });
+
+      // Función de logout (cerrar sesión)
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          location.href = '/login.html'; // Redirige a la página de login
+        });
+      }
+
+      // Conectar pasando token + color elegido a Socket.IO
+      const socket = io('/', { auth: { token, color: chosenColor } });
+
+      const chatBox = document.getElementById('chatBox');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+
+      // Verificar que chatInput esté presente en el DOM
+      if (!chatInput) {
+        console.error("El campo de texto para enviar el mensaje no se ha encontrado");
+        return; // Salir si chatInput no está presente
+      }
+
+      // Función para mostrar mensajes de sistema (conexión/desconexión)
+      function appendSystem(text) {
+        const el = document.createElement('div');
+        el.style.opacity = 0.75;
+        el.textContent = `• ${text}`;
+        chatBox.appendChild(el);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      // Función para mostrar un mensaje
+      function appendMessage({ user, text, ts, color }) {
+        const row = document.createElement('div');
+        const time = new Date(ts).toLocaleTimeString();
+        const nameColor = color || '#fff';
+        row.innerHTML = `<strong style="color:${nameColor}">${user}</strong> <small>${time}</small><br>${text}`;
+        chatBox.appendChild(row);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      // Manejo de errores de conexión
+      socket.on('connect_error', (err) => {
+        appendSystem('Error de conexión: ' + (err?.message || 'desconocido'));
+      });
+
+      // Recibir mensaje del sistema
+      socket.on('chat:system', appendSystem);
+
+      // Recibir mensaje de chat
+      socket.on('chat:message', (msg) => {
+        // msg: { user, text, ts, color }
+        appendMessage(msg);
+      });
+
+      // *** El evento de click para "Entrar al chat" ***
+      const joinChatBtn = document.getElementById('joinChat');
+      const colorPickerContainer = document.getElementById('colorPickerContainer');
+      const chatContainer = document.getElementById('chatContainer');
+
+      joinChatBtn.addEventListener('click', () => {
+        // Al hacer clic en el botón, ocultamos el selector de color y mostramos el chat
+        colorPickerContainer.style.display = 'none';
+        chatContainer.style.display = 'block';
+
+        // Conectar al chat con el token y el color seleccionado
+        socket.emit('chat:join', { username: user.username, color: chosenColor });
+      });
+
+      // Enviar mensaje en el chat
+      chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = chatInput.value.trim();
+        if (!text) return; // Si el texto está vacío, no enviar
+        socket.emit('chat:message', text); // Enviar mensaje
+        chatInput.value = ''; // Limpiar el campo de texto
+      });
+    })(); // Fin de la función autoejecutable
+  </script>
 </body>
 </html>
+
+
+
