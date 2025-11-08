@@ -33,6 +33,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
+
         const json = await res.json();
         
         if (!res.ok) {
@@ -40,23 +41,19 @@
           return;
         }
 
-        
         console.log('Login exitoso. Usuario:', json.user);
-
 
         localStorage.setItem('token', json.token);
         localStorage.setItem('user', JSON.stringify(json.user));
 
-        
         console.log('Token guardado:', json.token);  
         console.log('Usuario guardado:', json.user); 
-
-
         console.log('Token en localStorage:', localStorage.getItem('token'));
         console.log('Usuario en localStorage:', JSON.parse(localStorage.getItem('user')));
 
-       
-        location.replace('/index.html'); 
+        location.replace('/index.html');
+
+      } catch (err) {
         console.error(err);
         alert('Error de red. ¿Servidor levantado?');
       }
