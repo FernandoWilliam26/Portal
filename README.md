@@ -4,7 +4,7 @@ Repositorio: [FernandoWilliam26/Portal](https://github.com/FernandoWilliam26/Por
 
 ---
 
-## 🧾 Contenido
+## Contenido
 
 - `src/` — código fuente de la aplicación  
 - `.env` — archivo de configuración de entorno
@@ -12,7 +12,7 @@ Repositorio: [FernandoWilliam26/Portal](https://github.com/FernandoWilliam26/Por
 
 ---
 
-## 🚀 Características principales
+## Características principales
 
 - Registro, inicio de sesión y gestión de usuarios  
 - Autenticación para el acceso a funciones privadas  
@@ -22,7 +22,7 @@ Repositorio: [FernandoWilliam26/Portal](https://github.com/FernandoWilliam26/Por
 
 ---
 
-## 🔧 Instalación y puesta en marcha
+## Instalación y puesta en marcha
 
 1. **Clona este repositorio:**
    
@@ -33,7 +33,7 @@ Repositorio: [FernandoWilliam26/Portal](https://github.com/FernandoWilliam26/Por
 
    ---
 
-## 🚀 Ejecución de la aplicación
+## Ejecución de la aplicación
 
 2. **Instala las dependencias:**
    Instala las dependencias del proyecto usando `npm`:
