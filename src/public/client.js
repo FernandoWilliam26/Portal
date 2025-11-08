@@ -1,15 +1,14 @@
-// Estado de sesión
 const token = localStorage.getItem('token');
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-// Elementos de la UI
+
 const logoutBtn = document.getElementById('logoutBtn');
 const chatLink = document.getElementById('chatLink');
 const loginLink = document.getElementById('loginLink');
 const registerLink = document.getElementById('registerLink');
 const adminPanel = document.getElementById('adminPanel');
 
-// Verificar si el usuario está logueado
+
 console.log('Sesion -> token?', !!token, 'user?', user);
 
 if (logoutBtn) {
@@ -30,7 +29,7 @@ if (token && user) {
   console.log('No estás logueado o el token es inválido');
 }
 
-// Renderizar productos
+
 const productsContainer = document.getElementById('products');
 async function loadProducts() {
   if (!productsContainer) return;
@@ -72,7 +71,7 @@ async function loadProducts() {
 
 if (productsContainer) loadProducts();
 
-// Crear producto (solo admin)
+
 const createForm = document.getElementById('createForm');
 if (createForm) {
   createForm.addEventListener('submit', async (e) => {
@@ -107,7 +106,7 @@ if (createForm) {
   });
 }
 
-// Delegación para editar / eliminar (solo admin)
+
 if (productsContainer) {
   productsContainer.addEventListener('click', async (e) => {
     const btn = e.target.closest('button');
