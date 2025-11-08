@@ -5,7 +5,6 @@ import { authorizeRole } from '../middleware/authorizeRole.js';
 
 const router = Router();
 
-// 📦 Obtener todos los productos (público)
 router.get('/', async (req, res) => {
   try {
     const items = await Product.find().sort({ createdAt: -1 });
@@ -16,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// 🔍 Obtener detalle de un producto
+
 router.get('/:id', async (req, res) => {
   try {
     const item = await Product.findById(req.params.id);
@@ -28,7 +27,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// ➕ Crear producto (solo admin)
+
 router.post('/', authenticateJWT, authorizeRole('admin'), async (req, res) => {
   try {
     const { name, description, price, imageUrl } = req.body;
@@ -43,7 +42,7 @@ router.post('/', authenticateJWT, authorizeRole('admin'), async (req, res) => {
   }
 });
 
-// ✏️ Editar producto (solo admin)
+
 router.put('/:id', authenticateJWT, authorizeRole('admin'), async (req, res) => {
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -55,7 +54,7 @@ router.put('/:id', authenticateJWT, authorizeRole('admin'), async (req, res) => 
   }
 });
 
-// ❌ Eliminar producto (solo admin)
+
 router.delete('/:id', authenticateJWT, authorizeRole('admin'), async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);

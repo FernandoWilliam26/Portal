@@ -40,24 +40,23 @@
           return;
         }
 
-        // Verificar que los datos del usuario son correctos
+        
         console.log('Login exitoso. Usuario:', json.user);
 
-        // Guarda el token y el usuario en localStorage
+
         localStorage.setItem('token', json.token);
         localStorage.setItem('user', JSON.stringify(json.user));
 
-        // Verificar que el token y el usuario están guardados
-        console.log('Token guardado:', json.token);  // Verifica en consola
-        console.log('Usuario guardado:', json.user); // Verifica en consola
+        
+        console.log('Token guardado:', json.token);  
+        console.log('Usuario guardado:', json.user); 
 
-        // Verificar que los datos en localStorage son correctos
+
         console.log('Token en localStorage:', localStorage.getItem('token'));
         console.log('Usuario en localStorage:', JSON.parse(localStorage.getItem('user')));
 
-        // Redirige al portal de productos
-        location.replace('/index.html'); // Asegúrate de usar `location.replace()` para evitar que el usuario regrese al login con el botón "Atrás"
-      } catch (err) {
+       
+        location.replace('/index.html'); 
         console.error(err);
         alert('Error de red. ¿Servidor levantado?');
       }
