@@ -46,4 +46,49 @@ Repositorio: [FernandoWilliam26/Portal](https://github.com/FernandoWilliam26/Por
    npm start
 
 
+## Estructura del proyecto
+
+src/
+
+├─ server.js
+
+├─ config.js
+
+├─ models/
+
+│ ├─ User.js
+
+│ └─ Product.js
+
+├─ routes/
+
+│ ├─ authRoutes.js
+
+│ ├─ productRoutes.js
+
+│ └─ chatRoutes.js
+
+└─ middleware/
+
+└─ authenticateJWT.js
+
+public/
+
+├─ index.html
+
+├─ login.html
+
+├─ register.html
+
+├─ chat.html
+
+├─ styles.css
+
+├─ client.js
+
+├─ chat.js
+
+└─ images/
+
+
 
